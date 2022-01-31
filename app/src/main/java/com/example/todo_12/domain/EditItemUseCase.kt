@@ -1,8 +1,8 @@
 package com.example.todo_12.domain
 
-class EditItemUseCase {
+class EditItemUseCase(private val repository: ShopListRepository) {
 
     fun editItem(item: ShopItem) {
-        TODO("EDIT ITEM")
+        repository.editItem(item)
     }
 }
