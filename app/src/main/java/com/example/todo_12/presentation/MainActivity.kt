@@ -10,6 +10,7 @@ import java.security.Provider
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
+    private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +19,13 @@ class MainActivity : AppCompatActivity() {
         // subscribe shop list
         viewModel.shopList.observe(this) {
             Log.d("Main Activity", it.toString())
+            if (count == 0) {
+                count++
+                val item = it[0]
+                viewModel.changeEnableState(item)
+            }
+
         }
-        viewModel.getShopList()
 
 
     }
