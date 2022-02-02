@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
+import com.example.todo_12.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +36,12 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.DISABLE,
                 ShopListAdapter.MAX_POOL_SIZE
             )
+        }
+        adapterShL.onShopItemLongClickListere = object: ShopListAdapter.OnShopItemLongClickListener {
+            override fun longListener(shopItem: ShopItem) {
+                viewModel.changeEnableState(shopItem)
+            }
+
         }
     }
 
