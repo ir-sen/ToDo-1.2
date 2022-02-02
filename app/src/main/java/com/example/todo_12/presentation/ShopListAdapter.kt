@@ -13,12 +13,13 @@ import com.example.todo_12.domain.ShopItem
 class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
     private var count = 0
-    var onShopItemLongClickListere: OnShopItemLongClickListener? = null
+    var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var shopList = listOf<ShopItem>()
     set(value) {
         field = value
         notifyDataSetChanged()
     }
+
 // viewType = override fun getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
@@ -41,7 +42,7 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
 
         holder.view.setOnLongClickListener {
             Toast.makeText(holder.view.context, "This is long", Toast.LENGTH_SHORT).show()
-            onShopItemLongClickListere?.longListener(shopItem)
+            onShopItemLongClickListener?.invoke(shopItem)
 
             true
         }

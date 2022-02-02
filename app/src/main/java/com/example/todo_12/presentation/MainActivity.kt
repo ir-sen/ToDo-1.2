@@ -32,17 +32,14 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.ENABLE,
                 ShopListAdapter.MAX_POOL_SIZE
             )
-           recycledViewPool.setMaxRecycledViews(
+            recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.DISABLE,
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
-        adapterShL.onShopItemLongClickListere = object: ShopListAdapter.OnShopItemLongClickListener {
-            override fun longListener(shopItem: ShopItem) {
-                viewModel.changeEnableState(shopItem)
-            }
-
+        adapterShL.onShopItemLongClickListener = {
+            viewModel.changeEnableState(it)
         }
-    }
 
+    }
 }
