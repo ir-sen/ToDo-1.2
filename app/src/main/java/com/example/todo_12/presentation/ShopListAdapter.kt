@@ -55,7 +55,6 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
             onItemLongListener?.invoke(shopItem)
         }
 
-
         holder.nameText.text = shopItem.name
         holder.countText.text = shopItem.count.toString()
     }
@@ -74,7 +73,6 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         }
 
     }
-
 
     class ShopItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val nameText = view.findViewById<TextView>(R.id.tv_name)

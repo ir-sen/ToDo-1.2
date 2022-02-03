@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
-import com.example.todo_12.domain.ShopItem
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,16 +41,44 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        adapterShL.onShopItemLongClickListener = {
-            viewModel.changeEnableState(it)
-        }
+        setUpClickListener()
+        setUpLongClickListener()
+        setUpSwipeListener(rvShopList)
 
+    }
+
+    private fun setUpSwipeListener(rvShopList: RecyclerView) {
+        val swipeCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val currentPosition = adapterShL.shopList[viewHolder.adapterPosition]
+                viewModel.deleteItem(currentPosition)
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(rvShopList)
+    }
+
+    private fun setUpLongClickListener() {
         adapterShL.onItemLongListener = {
             Log.d("OnClickListener", "$it")
         }
+    }
 
-
-
-
+    private fun setUpClickListener() {
+        adapterShL.onShopItemLongClickListener = {
+            viewModel.changeEnableState(it)
+        }
     }
 }
