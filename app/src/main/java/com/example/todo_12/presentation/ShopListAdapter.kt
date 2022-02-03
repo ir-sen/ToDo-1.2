@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
 import com.example.todo_12.domain.ShopItem
@@ -14,6 +15,9 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
 
     private var count = 0
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
+    var onItemLongListener: ((ShopItem) -> Unit)? = null
+
+
     var shopList = listOf<ShopItem>()
     set(value) {
         field = value
@@ -29,6 +33,7 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
             else -> throw RuntimeException("Unknown viewType: $viewType")
         }
 
+
         val view = LayoutInflater.from(parent.context).inflate(
             layout,
             parent,
@@ -43,23 +48,16 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         holder.view.setOnLongClickListener {
             Toast.makeText(holder.view.context, "This is long", Toast.LENGTH_SHORT).show()
             onShopItemLongClickListener?.invoke(shopItem)
-
             true
         }
 
+        holder.view.setOnClickListener {
+            onItemLongListener?.invoke(shopItem)
+        }
+
+
         holder.nameText.text = shopItem.name
         holder.countText.text = shopItem.count.toString()
-//            holder.nameText.setTextColor(
-//                ContextCompat.getColor(holder.view.context, android.R.color.holo_red_dark)
-//            )
-//        }else {
-//            holder.nameText.text = shopItem.name
-//            holder.countText.text = shopItem.name
-//        }
-////            holder.nameText.setTextColor(
-////                ContextCompat.getColor(holder.view.context, android.R.color.white)
-////            )
-////        }
     }
 
 
@@ -83,9 +81,7 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         val countText = view.findViewById<TextView>(R.id.tv_count)
     }
 
-    interface OnShopItemLongClickListener {
-        fun longListener(shopItem: ShopItem)
-    }
+
     companion object {
         const val ENABLE = 1
         const val DISABLE = 0

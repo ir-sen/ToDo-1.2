@@ -2,7 +2,9 @@ package com.example.todo_12.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
 import com.example.todo_12.domain.ShopItem
@@ -11,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterShL: ShopListAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +40,17 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
+
         adapterShL.onShopItemLongClickListener = {
             viewModel.changeEnableState(it)
         }
+
+        adapterShL.onItemLongListener = {
+            Log.d("OnClickListener", "$it")
+        }
+
+
+
 
     }
 }
