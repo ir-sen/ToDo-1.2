@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
@@ -20,13 +21,14 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
 
     var shopList = listOf<ShopItem>()
     set(value) {
+        val callback = ShopListDiffCallback(shopList, value)
+        val diffResult = DiffUtil.calculateDiff(callback)
+        diffResult.dispatchUpdatesTo(this)
         field = value
-        notifyDataSetChanged()
     }
 
 // viewType = override fun getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
         val layout = when(viewType) {
             ENABLE -> R.layout.item_shop_enable
             DISABLE -> R.layout.item_shop_disable
@@ -43,6 +45,7 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        Log.d("onBindViewHolder", "onBindViewHolder, count: ${++count}")
         val shopItem = shopList[position]
 
         holder.view.setOnLongClickListener {
