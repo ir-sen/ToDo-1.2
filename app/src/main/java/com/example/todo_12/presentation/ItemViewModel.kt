@@ -1,5 +1,7 @@
 package com.example.todo_12.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.todo_12.data.RepositoryImpl
 import com.example.todo_12.domain.AddItemUseCase
@@ -14,6 +16,15 @@ class ItemViewModel: ViewModel() {
     private val addItemUseCase = AddItemUseCase(repository)
     private val getItemUseCase = GetItemUseCase(repository)
     private val editItemUseCase = EditItemUseCase(repository)
+
+    private val _errorInputName = MutableLiveData<Boolean>()
+    val errorInputName: LiveData<Boolean>
+        get() = _errorInputName
+
+    private val _errorInputCount = MutableLiveData<Boolean>()
+    val errorInputCount: LiveData<Boolean>
+        get() = _errorInputCount
+
 
     fun addItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
@@ -55,14 +66,24 @@ class ItemViewModel: ViewModel() {
         var result = true
         if (inputName.isBlank()) {
             TODO("show error input name")
+            _errorInputName.value = true
             result = false
         }
 
         if (inputCount < 0) {
             TODO("show error input count")
+            _errorInputCount.value = true
             result = false
         }
         return result
+    }
+
+    fun resetErrorInputName() {
+        _errorInputName.value = false
+    }
+
+    fun resetErrorCount() {
+        _errorInputCount.value = false
     }
 
     companion object {
