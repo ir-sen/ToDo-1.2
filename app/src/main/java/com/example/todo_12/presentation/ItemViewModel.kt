@@ -25,6 +25,13 @@ class ItemViewModel: ViewModel() {
     val errorInputCount: LiveData<Boolean>
         get() = _errorInputCount
 
+    private val _shopItem = MutableLiveData<ShopItem>()
+    val shopItem: LiveData<ShopItem>
+        get() = _shopItem
+
+    private val _enableClose = MutableLiveData<Unit>()
+    val enableClose: LiveData<Unit>
+        get() = _enableClose
 
     fun addItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
@@ -33,11 +40,13 @@ class ItemViewModel: ViewModel() {
         if (validate) {
             val shopItem = ShopItem(name, count, true)
             addItemUseCase.addItem(shopItem)
+            finishWork()
         }
     }
 
     fun getItem(id: Int) {
         val item = getItemUseCase.getItem(id)
+        _shopItem.value = item
     }
 
     fun editItem(inputName: String?, inputCount: String?) {
@@ -45,8 +54,12 @@ class ItemViewModel: ViewModel() {
         val count = parseCount(inputCount)
         val validate = validateInput(name, count)
         if (validate) {
-            val ShopItem = ShopItem(name, count, true)
-            editItemUseCase.editItem(ShopItem)
+            // вытаскиваем значения из LiveData на прямую (его копию) что бы изменить
+            _shopItem.value?.let {
+                val item = it.copy(name = name, count = count)
+                editItemUseCase.editItem(item)
+                finishWork()
+            }
         }
     }
 
@@ -78,12 +91,18 @@ class ItemViewModel: ViewModel() {
         return result
     }
 
+
+
     fun resetErrorInputName() {
         _errorInputName.value = false
     }
 
     fun resetErrorCount() {
         _errorInputCount.value = false
+    }
+
+    private fun finishWork() {
+        _enableClose.value = Unit
     }
 
     companion object {
