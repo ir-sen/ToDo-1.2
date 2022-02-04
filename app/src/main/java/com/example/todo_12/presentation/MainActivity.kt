@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
-
         setUpClickListener()
         setUpLongClickListener()
         setUpSwipeListener(rvShopList)

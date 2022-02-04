@@ -1,32 +1,18 @@
 package com.example.todo_12.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
 import com.example.todo_12.domain.ShopItem
 
-class ShopListAdapter: ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>(ShopItemDiffCallback()) {
+class ShopListAdapter: ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
-    private var count = 0
+
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onItemLongListener: ((ShopItem) -> Unit)? = null
 
-
-//    var shopList = listOf<ShopItem>()
-//    set(value) {
-//        val callback = ShopListDiffCallback(shopList, value)
-//        val diffResult = DiffUtil.calculateDiff(callback)
-//        diffResult.dispatchUpdatesTo(this)
-//        field = value
-//    }
 
 // viewType = override fun getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
@@ -46,7 +32,6 @@ class ShopListAdapter: ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        Log.d("onBindViewHolder", "onBindViewHolder, count: ${++count}")
         val shopItem = getItem(position)
 
         holder.view.setOnLongClickListener {
@@ -63,10 +48,6 @@ class ShopListAdapter: ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>
         holder.countText.text = shopItem.count.toString()
     }
 
-
-//    override fun getItemCount(): Int {
-//        return shopList.size
-//    }
 // this is viewType in onCreateViewHolder
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
@@ -77,12 +58,6 @@ class ShopListAdapter: ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>
         }
 
     }
-
-    class ShopItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-        val nameText = view.findViewById<TextView>(R.id.tv_name)
-        val countText = view.findViewById<TextView>(R.id.tv_count)
-    }
-
 
     companion object {
         const val ENABLE = 1
