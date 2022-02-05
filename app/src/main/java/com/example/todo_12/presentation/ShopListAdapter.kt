@@ -11,7 +11,7 @@ class ShopListAdapter: ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCal
 
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
-    var onItemLongListener: ((ShopItem) -> Unit)? = null
+    var onItemListener: ((ShopItem) -> Unit)? = null
 
 
 // viewType = override fun getItemViewType
@@ -41,7 +41,7 @@ class ShopListAdapter: ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCal
         }
 
         holder.view.setOnClickListener {
-            onItemLongListener?.invoke(shopItem)
+            onItemListener?.invoke(shopItem)
         }
 
         holder.nameText.text = shopItem.name

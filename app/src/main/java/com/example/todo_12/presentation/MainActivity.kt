@@ -1,5 +1,6 @@
 package com.example.todo_12.presentation
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
+import com.example.todo_12.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
@@ -14,15 +16,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterShL: ShopListAdapter
 
-
+    lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         setUpRecycleView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         // subscribe shop list
         viewModel.shopList.observe(this) {
             adapterShL.submitList(it)
+        }
+// add button
+        binding.buttonAddShopItem.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
     }
 
@@ -40,8 +49,8 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
-        setUpClickListener()
         setUpLongClickListener()
+        setUpClickListener()
         setUpSwipeListener(rvShopList)
 
     }
@@ -68,14 +77,16 @@ class MainActivity : AppCompatActivity() {
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
-
-    private fun setUpLongClickListener() {
-        adapterShL.onItemLongListener = {
+    // edit
+    private fun setUpClickListener() {
+        adapterShL.onItemListener = {
             Log.d("OnClickListener", "$it")
+            val intentMy = ShopItemActivity.newIntentEditItem(this, it.id)
+            startActivity(intentMy)
         }
     }
 
-    private fun setUpClickListener() {
+    private fun setUpLongClickListener() {
         adapterShL.onShopItemLongClickListener = {
             viewModel.changeEnableState(it)
         }
