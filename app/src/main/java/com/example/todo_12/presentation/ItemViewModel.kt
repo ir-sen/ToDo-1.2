@@ -78,13 +78,11 @@ class ItemViewModel: ViewModel() {
     private fun validateInput(inputName: String, inputCount: Int): Boolean {
         var result = true
         if (inputName.isBlank()) {
-            TODO("show error input name")
             _errorInputName.value = true
             result = false
         }
 
-        if (inputCount < 0) {
-            TODO("show error input count")
+        if (inputCount <= 0) {
             _errorInputCount.value = true
             result = false
         }

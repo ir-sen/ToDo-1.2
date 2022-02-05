@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ToDo-1.2</string>
+    <string name="count_error">Error input count</string>
+    <string name="name_error">Error input name</string>
 </resources>
