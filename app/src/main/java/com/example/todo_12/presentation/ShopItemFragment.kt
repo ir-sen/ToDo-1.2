@@ -15,14 +15,12 @@ import com.example.todo_12.R
 import com.example.todo_12.databinding.FragmentShopItemBinding
 import com.example.todo_12.domain.ShopItem
 
-class ShopItemFragment(
-    private val screenMode: String = MODE_UNKNOWN,
-    private val shopItemId: Int = ShopItem.UNDEFIND_ID
-): Fragment() {
+class ShopItemFragment: Fragment() {
 
     private lateinit var viewModel: ItemViewModel
 
-
+    private var screenMode = MODE_UNKNOWN
+    private var shopItemId = ShopItem.UNDEFIND_ID
 
     private var _binding: FragmentShopItemBinding? = null
     private val binding get() = _binding!!
@@ -38,10 +36,14 @@ class ShopItemFragment(
     }
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        parseParams()
         viewModel = ViewModelProvider(this)[ItemViewModel::class.java]
         addTextChangeListeners()
         launchRightMode()
@@ -136,11 +138,20 @@ class ShopItemFragment(
 
 // проверка интента на правельность
     private fun parseParams() {
-        if (screenMode != EDIT_MODE && screenMode != ADD_MODE) {
+        val args = requireArguments()
+        if(!args.containsKey(EXTRA_KEY)) {
             throw RuntimeException("Parse key mode absent")
         }
-        if (screenMode == EDIT_MODE && shopItemId == ShopItem.UNDEFIND_ID) {
-            throw RuntimeException("Params shop item id is absent")
+        val mode = args.getString(EXTRA_KEY)
+        if (mode != ADD_MODE && mode != EDIT_MODE) {
+            throw RuntimeException("Unknown extra mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == EDIT_MODE) {
+            if (!args.containsKey(EXTRA_KEY_ITEM_ID)) {
+                throw RuntimeException("Params shop item id is absent")
+            }
+            shopItemId = args.getInt(EXTRA_KEY_ITEM_ID, ShopItem.UNDEFIND_ID)
         }
     }
 
@@ -152,25 +163,20 @@ class ShopItemFragment(
         private const val MODE_UNKNOWN = ""
 
         fun newInstanceAddItem(): ShopItemFragment {
-            return ShopItemFragment(ADD_MODE)
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_KEY, ADD_MODE)
+                }
+            }
         }
 
         fun newInstanceEditItem(shopItemId: Int): ShopItemFragment {
-            return ShopItemFragment(EDIT_MODE, shopItemId)
-        }
-
-        fun newIntentAddItem(context: Context): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_KEY, ADD_MODE)
-            return intent
-        }
-
-        fun newIntentEditItem(context: Context, id: Int): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_KEY, EDIT_MODE)
-            intent.putExtra(EXTRA_KEY_ITEM_ID, id)
-            Log.d("ShopItemActivity", id.toString())
-            return intent
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_KEY, EDIT_MODE)
+                    putInt(EXTRA_KEY_ITEM_ID, shopItemId)
+                }
+            }
         }
 
     }
