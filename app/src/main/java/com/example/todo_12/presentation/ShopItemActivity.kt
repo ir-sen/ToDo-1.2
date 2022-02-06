@@ -16,17 +16,17 @@ class ShopItemActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityShopItemBinding
 //    private lateinit var viewModel: ItemViewModel
-//    private var screenMode = MODE_UNKNOWN
-//    private var shopItemId = ShopItem.UNDEFIND_ID
+    private var screenMode = MODE_UNKNOWN
+    private var shopItemId = ShopItem.UNDEFIND_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShopItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        parseIntent()
+        parseIntent()
 //        viewModel = ViewModelProvider(this)[ItemViewModel::class.java]
 //        addTextChangeListeners()
-//        launchRightMode()
+        launchRightMode()
 //        observeViewModel()
     }
 
@@ -54,12 +54,16 @@ class ShopItemActivity : AppCompatActivity() {
 //        }
 //    }
 //
-//    private fun launchRightMode() {
-//        when(screenMode) {
-//            EDIT_MODE -> launchEditMode()
-//            ADD_MODE -> launchAddMode()
-//        }
-//    }
+    private fun launchRightMode() {
+        val fragment = when(screenMode) {
+            EDIT_MODE -> ShopItemFragment.newInstanceEditItem(shopItemId)
+            ADD_MODE -> ShopItemFragment.newInstanceAddItem()
+            else -> throw RuntimeException("Parse key mode absent")
+        }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.shop_item_container, fragment)
+            .commit()
+    }
 //
 //    private fun addTextChangeListeners() {
 //        // hide error when user input text
@@ -115,24 +119,24 @@ class ShopItemActivity : AppCompatActivity() {
 //
 //    }
 //
-//// проверка интента на правельность
-//    private fun parseIntent() {
-//        if(!intent.hasExtra(EXTRA_KEY)) {
-//            throw RuntimeException("Parse key mode absent")
-//        }
-//        val mode = intent.getStringExtra(EXTRA_KEY)
-//        if (mode != ADD_MODE && mode != EDIT_MODE) {
-//            throw RuntimeException("Unknown extra mode $mode")
-//        }
-//        screenMode = mode
-//        if (screenMode == EDIT_MODE) {
-//            if (!intent.hasExtra(EXTRA_KEY_ITEM_ID)) {
-//                throw RuntimeException("Params shop item id is absent")
-//            }
-//            shopItemId = intent.getIntExtra(EXTRA_KEY_ITEM_ID, ShopItem.UNDEFIND_ID)
-//        }
-//
-//    }
+// проверка интента на правельность
+    private fun parseIntent() {
+        if(!intent.hasExtra(EXTRA_KEY)) {
+            throw RuntimeException("Parse key mode absent")
+        }
+        val mode = intent.getStringExtra(EXTRA_KEY)
+        if (mode != ADD_MODE && mode != EDIT_MODE) {
+            throw RuntimeException("Unknown extra mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == EDIT_MODE) {
+            if (!intent.hasExtra(EXTRA_KEY_ITEM_ID)) {
+                throw RuntimeException("Params shop item id is absent")
+            }
+            shopItemId = intent.getIntExtra(EXTRA_KEY_ITEM_ID, ShopItem.UNDEFIND_ID)
+        }
+
+    }
 
     companion object {
         private const val EXTRA_KEY = "extra_mode"
