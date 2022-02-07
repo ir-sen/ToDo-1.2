@@ -15,7 +15,7 @@ import com.example.todo_12.domain.ShopItem
 class ShopItemActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityShopItemBinding
-//    private lateinit var viewModel: ItemViewModel
+
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFIND_ID
 
@@ -24,36 +24,11 @@ class ShopItemActivity : AppCompatActivity() {
         binding = ActivityShopItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
         parseIntent()
-//        viewModel = ViewModelProvider(this)[ItemViewModel::class.java]
-//        addTextChangeListeners()
-        launchRightMode()
-//        observeViewModel()
+        if (savedInstanceState == null) {
+            launchRightMode()
+        }
     }
 
-//    private fun observeViewModel() {
-//        // set  error in count view
-//        viewModel.errorInputCount.observe(this) {
-//            val message = if (it) {
-//                getString(R.string.count_error)
-//            } else {
-//                null
-//            }
-//            binding.tilCount.error = message
-//        }
-//
-//        viewModel.errorInputName.observe(this) {
-//            val message = if (it) {
-//                getString(R.string.name_error)
-//            } else {
-//                null
-//            }
-//            binding.tilName.error = message
-//        }
-//        viewModel.enableClose.observe(this) {
-//            finish()
-//        }
-//    }
-//
     private fun launchRightMode() {
         val fragment = when(screenMode) {
             EDIT_MODE -> ShopItemFragment.newInstanceEditItem(shopItemId)
@@ -61,64 +36,10 @@ class ShopItemActivity : AppCompatActivity() {
             else -> throw RuntimeException("Parse key mode absent")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, fragment)
             .commit()
     }
-//
-//    private fun addTextChangeListeners() {
-//        // hide error when user input text
-//        binding.edName.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                viewModel.resetErrorInputName()
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//            }
-//        })
-//
-//        binding.edCount.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                viewModel.resetErrorCount()
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//            }
-//        })
-//    }
-//
-//    private fun launchEditMode() {
-//        // get current item
-//        viewModel.getItem(shopItemId)
-//        // set listener
-//        viewModel.shopItem.observe(this){
-//            // set value what you write
-//            with(binding) {
-//                edName.setText(it.name)
-//                edCount.setText(it.count.toString())
-//            }
-//        }
-//        with(binding) {
-//            saveButton.setOnClickListener {
-//                viewModel.editItem(edName.text?.toString(), edCount.text?.toString())
-//            }
-//        }
-//    }
-//
-//    private fun launchAddMode() {
-//        with(binding) {
-//            saveButton.setOnClickListener {
-//                viewModel.addItem(edName.text?.toString(), edCount.text?.toString())
-//            }
-//        }
-//
-//    }
-//
+
 // проверка интента на правельность
     private fun parseIntent() {
         if(!intent.hasExtra(EXTRA_KEY)) {

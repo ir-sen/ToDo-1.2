@@ -37,6 +37,7 @@ class ShopItemFragment: Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("ShopItemFragment", "onCreate()")
         super.onCreate(savedInstanceState)
         parseParams()
     }
@@ -51,7 +52,7 @@ class ShopItemFragment: Fragment() {
     }
 
 
-        private fun observeViewModel() {
+    private fun observeViewModel() {
         // set  error in count view
         viewModel.errorInputCount.observe(viewLifecycleOwner) {
             val message = if (it) {
@@ -70,6 +71,7 @@ class ShopItemFragment: Fragment() {
             }
             binding.tilName.error = message
         }
+
         viewModel.enableClose.observe(viewLifecycleOwner) {
             activity?.onBackPressed()
         }
