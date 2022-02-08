@@ -53,9 +53,7 @@ class ShopItemFragment: Fragment() {
         }
     }
 
-    fun logP(value: String) {
-        Log.d("FRAGMENT", "$value = ${++count}")
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         logP("onCreate")
@@ -103,6 +101,9 @@ class ShopItemFragment: Fragment() {
         super.onPause()
     }
 
+    fun logP(value: String) {
+        Log.d("FRAGMENT", "$value = ${++count}")
+    }
 
     private fun observeViewModel() {
         // set  error in count view

@@ -13,5 +13,4 @@ class ShopItemDiffCallback:
     override fun areContentsTheSame(oldItem: ShopItem, newItem: ShopItem): Boolean {
         return oldItem == newItem
     }
-
 }

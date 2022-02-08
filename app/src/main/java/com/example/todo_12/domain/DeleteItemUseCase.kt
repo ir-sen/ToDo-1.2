@@ -5,5 +5,4 @@ class DeleteItemUseCase(private val repository: ShopListRepository) {
     fun deleteItem(item: ShopItem) {
         repository.deleteItem(item)
     }
-
 }
