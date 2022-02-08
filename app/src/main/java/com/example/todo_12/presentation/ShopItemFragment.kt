@@ -22,6 +22,10 @@ class ShopItemFragment: Fragment() {
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFIND_ID
 
+    lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
+    var count = 0
+
     private var _binding: FragmentShopItemBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -29,26 +33,74 @@ class ShopItemFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        logP("onCreateView")
         _binding = FragmentShopItemBinding.inflate(inflater, container, false)
         //val binding: FragmentShopItemBinding = FragmentShopItemBinding.inflate(inflater, R.layout.fragment_shop_item, container, false)
         return binding.root
 //        return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 
+// Any Activity come in context
+    // type conversion
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        logP("onAttach")
+        // dose this method implement the interface we need ?
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("You haven't redefined the method interface onEditingFinishedListener")
+        }
+    }
+
+    fun logP(value: String) {
+        Log.d("FRAGMENT", "$value = ${++count}")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("ShopItemFragment", "onCreate()")
+        logP("onCreate")
         super.onCreate(savedInstanceState)
         parseParams()
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        logP("onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[ItemViewModel::class.java]
         addTextChangeListeners()
         launchRightMode()
         observeViewModel()
+    }
+
+    override fun onStart() {
+        logP("onStart")
+        super.onStart()
+    }
+
+    override fun onDestroy() {
+        logP("onDestroy")
+        super.onDestroy()
+    }
+
+    override fun onStop() {
+        logP("onStop")
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        logP("onDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDetach() {
+        logP("onDestroyView")
+        super.onDetach()
+    }
+
+    override fun onPause() {
+        logP("onPause")
+        super.onPause()
     }
 
 
@@ -73,7 +125,7 @@ class ShopItemFragment: Fragment() {
         }
 
         viewModel.enableClose.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -155,6 +207,10 @@ class ShopItemFragment: Fragment() {
             }
             shopItemId = args.getInt(EXTRA_KEY_ITEM_ID, ShopItem.UNDEFIND_ID)
         }
+    }
+
+    interface OnEditingFinishedListener{
+        fun onEditingFinished()
     }
 
     companion object {

@@ -7,12 +7,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.todo_12.R
 import com.example.todo_12.databinding.ActivityShopItemBinding
 import com.example.todo_12.domain.ShopItem
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     lateinit var binding: ActivityShopItemBinding
 
@@ -57,6 +58,11 @@ class ShopItemActivity : AppCompatActivity() {
             shopItemId = intent.getIntExtra(EXTRA_KEY_ITEM_ID, ShopItem.UNDEFIND_ID)
         }
 
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     companion object {
