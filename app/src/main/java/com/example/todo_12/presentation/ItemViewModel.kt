@@ -1,10 +1,7 @@
 package com.example.todo_12.presentation
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.todo_12.data.RepositoryImpl
 import com.example.todo_12.domain.AddItemUseCase
 import com.example.todo_12.domain.EditItemUseCase
@@ -39,14 +36,13 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
     val enableClose: LiveData<Unit>
         get() = _enableClose
 
-    private val scope = CoroutineScope(Dispatchers.IO)
 
     fun addItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val validate = validateInput(name, count)
         if (validate) {
-            scope.launch {
+            viewModelScope.launch {
                 val shopItem = ShopItem(name, count, true)
                 addItemUseCase.addItem(shopItem)
                 finishWork()
@@ -55,7 +51,7 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun getItem(id: Int) {
-        scope.launch {
+        viewModelScope.launch {
             val item = getItemUseCase.getItem(id)
             _shopItem.value = item
         }
@@ -68,7 +64,7 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
         if (validate) {
             // вытаскиваем значения из LiveData на прямую (его копию) что бы изменить
             _shopItem.value?.let {
-                scope.launch {
+                viewModelScope.launch {
                     val item = it.copy(name = name, count = count)
                     editItemUseCase.editItem(item)
                     finishWork()
@@ -115,10 +111,6 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
         _enableClose.value = Unit
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
-    }
 
     companion object {
         const val NULL = 0
