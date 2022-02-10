@@ -1,5 +1,7 @@
 package com.example.todo_12.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +11,9 @@ import com.example.todo_12.domain.EditItemUseCase
 import com.example.todo_12.domain.GetItemUseCase
 import com.example.todo_12.domain.ShopItem
 
-class ItemViewModel: ViewModel() {
+class ItemViewModel(application: Application): AndroidViewModel(application) {
 
-    private val repository = RepositoryImpl
+    private val repository = RepositoryImpl(application)
 
     private val addItemUseCase = AddItemUseCase(repository)
     private val getItemUseCase = GetItemUseCase(repository)
@@ -88,8 +90,6 @@ class ItemViewModel: ViewModel() {
         }
         return result
     }
-
-
 
     fun resetErrorInputName() {
         _errorInputName.value = false
