@@ -10,6 +10,10 @@ import com.example.todo_12.domain.AddItemUseCase
 import com.example.todo_12.domain.EditItemUseCase
 import com.example.todo_12.domain.GetItemUseCase
 import com.example.todo_12.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class ItemViewModel(application: Application): AndroidViewModel(application) {
 
@@ -35,20 +39,26 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
     val enableClose: LiveData<Unit>
         get() = _enableClose
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     fun addItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val validate = validateInput(name, count)
         if (validate) {
-            val shopItem = ShopItem(name, count, true)
-            addItemUseCase.addItem(shopItem)
-            finishWork()
+            scope.launch {
+                val shopItem = ShopItem(name, count, true)
+                addItemUseCase.addItem(shopItem)
+                finishWork()
+            }
         }
     }
 
     fun getItem(id: Int) {
-        val item = getItemUseCase.getItem(id)
-        _shopItem.value = item
+        scope.launch {
+            val item = getItemUseCase.getItem(id)
+            _shopItem.value = item
+        }
     }
 
     fun editItem(inputName: String?, inputCount: String?) {
@@ -58,9 +68,11 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
         if (validate) {
             // вытаскиваем значения из LiveData на прямую (его копию) что бы изменить
             _shopItem.value?.let {
-                val item = it.copy(name = name, count = count)
-                editItemUseCase.editItem(item)
-                finishWork()
+                scope.launch {
+                    val item = it.copy(name = name, count = count)
+                    editItemUseCase.editItem(item)
+                    finishWork()
+                }
             }
         }
     }
@@ -101,6 +113,11 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
 
     private fun finishWork() {
         _enableClose.value = Unit
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
     }
 
     companion object {

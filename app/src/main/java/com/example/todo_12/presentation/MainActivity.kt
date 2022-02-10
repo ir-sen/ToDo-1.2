@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
 import com.example.todo_12.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     private lateinit var adapterShL: ShopListAdapter
 
     private var shopItemContainer: FragmentContainerView? = null
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +102,9 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val currentPosition = adapterShL.currentList[viewHolder.adapterPosition]
-                viewModel.deleteItem(currentPosition)
+                scope.launch {
+                    viewModel.deleteItem(currentPosition)
+                }
             }
 
         }
@@ -120,5 +127,10 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         adapterShL.onShopItemLongClickListener = {
             viewModel.changeEnableState(it)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
 }
