@@ -8,6 +8,7 @@ import com.example.todo_12.domain.ShopItem
 import com.example.todo_12.domain.ShopListRepository
 import kotlin.random.Random
 
+// реализация функций через базу данных
 class RepositoryImpl(
     application: Application
 ): ShopListRepository {

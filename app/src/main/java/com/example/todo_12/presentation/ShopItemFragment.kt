@@ -37,7 +37,7 @@ class ShopItemFragment: Fragment() {
         _binding = FragmentShopItemBinding.inflate(inflater, container, false)
         //val binding: FragmentShopItemBinding = FragmentShopItemBinding.inflate(inflater, R.layout.fragment_shop_item, container, false)
         return binding.root
-//        return inflater.inflate(R.layout.fragment_shop_item, container, false)
+//        return inflater.inflate(R.layout., container, false)
     }
 
 // Any Activity come in context

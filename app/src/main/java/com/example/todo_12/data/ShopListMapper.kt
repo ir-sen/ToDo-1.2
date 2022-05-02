@@ -1,7 +1,7 @@
 package com.example.todo_12.data
 
 import com.example.todo_12.domain.ShopItem
-
+// приобразования одной сущности в другую
 class ShopListMapper {
 
     fun mapEntityToDbModel(shopItem: ShopItem): ShopItemDbModel {

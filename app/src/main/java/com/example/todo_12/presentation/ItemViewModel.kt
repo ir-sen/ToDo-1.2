@@ -42,6 +42,7 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
         val count = parseCount(inputCount)
         val validate = validateInput(name, count)
         if (validate) {
+            // все действия с базами данных желательно выполнять в друго потоке
             viewModelScope.launch {
                 val shopItem = ShopItem(name, count, true)
                 addItemUseCase.addItem(shopItem)
@@ -84,7 +85,7 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
             NULL
         }
     }
-
+// проверяет правельность написания данных если нет выводи предупреждения
     private fun validateInput(inputName: String, inputCount: Int): Boolean {
         var result = true
         if (inputName.isBlank()) {

@@ -21,6 +21,7 @@ abstract class AppDataBase: RoomDatabase() {
             INSTANCE?.let {
                 return it
             }
+            // делаем это для того что бы при обращений к базе несколько патоков не возникали 
             synchronized(LOCK) {
                 INSTANCE?.let {
                     return it
@@ -30,7 +31,7 @@ abstract class AppDataBase: RoomDatabase() {
                     AppDataBase::class.java,
                     DB_NAME
                 )
-                    .allowMainThreadQueries()
+                    //.allowMainThreadQueries()
                     .build()
                 INSTANCE = db
                 return db

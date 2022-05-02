@@ -2,7 +2,7 @@ package com.example.todo_12.presentation
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.todo_12.domain.ShopItem
-
+// 2 метод использования или замены notifyDataSetChanges ()
 class ShopListDiffCallback(
     private val oldList: List<ShopItem>,
     private val newList: List<ShopItem>

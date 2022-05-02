@@ -14,6 +14,7 @@ class ShopListAdapter: ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCal
     var onItemListener: ((ShopItem) -> Unit)? = null
 
 
+
 // viewType = override fun getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         val layout = when(viewType) {
