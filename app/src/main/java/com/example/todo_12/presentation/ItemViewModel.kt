@@ -1,24 +1,22 @@
 package com.example.todo_12.presentation
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.example.todo_12.data.RepositoryImpl
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.todo_12.domain.AddItemUseCase
 import com.example.todo_12.domain.EditItemUseCase
 import com.example.todo_12.domain.GetItemUseCase
 import com.example.todo_12.domain.ShopItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ItemViewModel(application: Application): AndroidViewModel(application) {
+class ItemViewModel @Inject constructor(
+    private val addItemUseCase: AddItemUseCase,
+    private val getItemUseCase: GetItemUseCase,
+    private val editItemUseCase: EditItemUseCase
+): ViewModel() {
 
-    private val repository = RepositoryImpl(application)
-
-    private val addItemUseCase = AddItemUseCase(repository)
-    private val getItemUseCase = GetItemUseCase(repository)
-    private val editItemUseCase = EditItemUseCase(repository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>

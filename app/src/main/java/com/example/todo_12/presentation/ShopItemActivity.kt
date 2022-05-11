@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import com.example.todo_12.R
 import com.example.todo_12.databinding.ActivityShopItemBinding
 import com.example.todo_12.domain.ShopItem
+import javax.inject.Inject
 
 class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     lateinit var binding: ActivityShopItemBinding
+
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFIND_ID

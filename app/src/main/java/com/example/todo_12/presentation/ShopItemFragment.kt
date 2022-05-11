@@ -1,7 +1,7 @@
 package com.example.todo_12.presentation
 
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.todo_12.R
 import com.example.todo_12.databinding.FragmentShopItemBinding
 import com.example.todo_12.domain.ShopItem
+import javax.inject.Inject
 
 class ShopItemFragment: Fragment() {
 
@@ -22,12 +23,27 @@ class ShopItemFragment: Fragment() {
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFIND_ID
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+
     lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     var count = 0
 
     private var _binding: FragmentShopItemBinding? = null
     private val binding get() = _binding!!
+
+    private val component by lazy {
+        (requireActivity().application as ShopListApp).component
+    }
+
+    override fun onAttach(activity: Activity) {
+        component.inject(this)
+        super.onAttach(activity)
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,31 +81,12 @@ class ShopItemFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         logP("onViewCreated")
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[ItemViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[ItemViewModel::class.java]
         addTextChangeListeners()
         launchRightMode()
         observeViewModel()
     }
 
-    override fun onStart() {
-        logP("onStart")
-        super.onStart()
-    }
-
-    override fun onDestroy() {
-        logP("onDestroy")
-        super.onDestroy()
-    }
-
-    override fun onStop() {
-        logP("onStop")
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        logP("onDestroyView")
-        super.onDestroyView()
-    }
 
     override fun onDetach() {
         logP("onDestroyView")

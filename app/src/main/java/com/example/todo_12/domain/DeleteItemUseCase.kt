@@ -1,6 +1,8 @@
 package com.example.todo_12.domain
 
-class DeleteItemUseCase(private val repository: ShopListRepository) {
+import javax.inject.Inject
+
+class DeleteItemUseCase @Inject constructor(private val repository: ShopListRepository) {
 
     suspend fun deleteItem(item: ShopItem) {
         repository.deleteItem(item)

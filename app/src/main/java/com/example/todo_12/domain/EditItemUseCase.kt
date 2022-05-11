@@ -1,6 +1,8 @@
 package com.example.todo_12.domain
 
-class EditItemUseCase(private val repository: ShopListRepository) {
+import javax.inject.Inject
+
+class EditItemUseCase @Inject constructor(private val repository: ShopListRepository) {
 
     suspend fun editItem(item: ShopItem) {
         repository.editItem(item)
