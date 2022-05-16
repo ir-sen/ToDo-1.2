@@ -1,7 +1,9 @@
 package com.example.todo_12.presentation
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +17,7 @@ import com.example.todo_12.R
 import com.example.todo_12.databinding.FragmentShopItemBinding
 import com.example.todo_12.domain.ShopItem
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class ShopItemFragment: Fragment() {
 
@@ -182,7 +185,19 @@ class ShopItemFragment: Fragment() {
     private fun launchAddMode() {
         with(binding) {
             saveButton.setOnClickListener {
-                viewModel.addItem(edName.text?.toString(), edCount.text?.toString())
+//                viewModel.addItem(edName.text?.toString(), edCount.text?.toString())
+                thread {
+                    context?.contentResolver?.insert(
+                        Uri.parse("content://com.example.todo_12/shop_items"),
+                        ContentValues().apply {
+                            put("id", 0)
+                            put("name", binding.edName.text?.toString())
+                            put("count", binding.edCount.text?.toString()?.toInt())
+                            put("enabled", true)
+                        }
+
+                    )
+                }
             }
         }
 

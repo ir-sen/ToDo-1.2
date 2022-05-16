@@ -1,7 +1,9 @@
 package com.example.todo_12.presentation
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -10,11 +12,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo_12.R
 import com.example.todo_12.databinding.ActivityMainBinding
+import com.example.todo_12.domain.ShopItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
@@ -56,6 +60,32 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
             } else {
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             }
+        }
+        // add provider
+        thread {
+            val cursor = contentResolver.query(
+                Uri.parse("content://com.example.todo_12/shop_items"),
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            while (cursor?.moveToNext() == true) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val count = cursor.getInt(cursor.getColumnIndexOrThrow("count"))
+                val enable = cursor.getInt(cursor.getColumnIndexOrThrow("enable")) > 0
+                val shopItem = ShopItem(
+                    id = id,
+                    name = name,
+                    count = count,
+                    enable = enable
+                )
+                Log.d("ProviderShow", "ShopItem: $shopItem")
+            }
+            cursor?.close()
         }
     }
 // realization

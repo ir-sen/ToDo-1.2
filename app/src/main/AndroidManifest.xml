@@ -23,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.example.todo_12"
+            android:name=".data.ShopListProvider"
+            android:exported="true"
+            />
     </application>
 
 </manifest>
